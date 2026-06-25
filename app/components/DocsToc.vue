@@ -17,7 +17,9 @@ const flatLinks = computed(() => flatten(props.links))
 
 let observer: IntersectionObserver | null = null
 
-onMounted(() => {
+function connectObserver() {
+  activeId.value = ''
+  observer?.disconnect()
   observer = new IntersectionObserver(
     (entries) => {
       const visible = entries.filter(e => e.isIntersecting)
@@ -27,12 +29,16 @@ onMounted(() => {
     },
     { rootMargin: '-100px 0px -70% 0px' }
   )
-  for (const link of flatLinks.value) {
-    const el = document.getElementById(link.id)
-    if (el) observer.observe(el)
-  }
-})
+  nextTick(() => {
+    for (const link of flatLinks.value) {
+      const el = document.getElementById(link.id)
+      if (el) observer?.observe(el)
+    }
+  })
+}
 
+onMounted(connectObserver)
+watch(flatLinks, connectObserver)
 onUnmounted(() => observer?.disconnect())
 </script>
 

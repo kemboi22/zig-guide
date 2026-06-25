@@ -12,7 +12,9 @@
   "dependencies": {
     "@nuxt/content": "^3.14.0",
     "@nuxtjs/color-mode": "^3.5.2",
+    "@tailwindcss/vite": "^4.3.1",
     "nuxt": "^4.4.8",
+    "tailwindcss": "^4.3.1",
     "vue": "^3.5.38",
     "vue-router": "^5.1.0"
   }

@@ -1,17 +1,31 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
 const mobileNavOpen = useState('mobileNavOpen', () => false)
+const route = useRoute()
 const { site } = useAppConfig()
+const { versions, version: currentVersion } = useDocVersion()
 
-const versions = [
-  { label: site.currentVersion, path: '/', current: true },
-  { label: '0.12.0', path: '#', current: false },
-  { label: '0.11.0', path: '#', current: false }
-]
 const versionMenuOpen = ref(false)
 
 function toggleColorMode() {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+}
+
+async function switchVersion(v: { slug: string; label: string }) {
+  versionMenuOpen.value = false
+
+  const slug = route.params.slug
+  const isDocsPath = Array.isArray(slug)
+    ? slug.length > 0 && versions.value.some(ver => ver.slug === slug[0])
+    : false
+
+  if (!isDocsPath) {
+    await navigateTo(`/${v.slug}/getting-started/welcome`)
+    return
+  }
+
+  const rest = (slug as string[]).slice(1).join('/')
+  await navigateTo(rest ? `/${v.slug}/${rest}` : `/${v.slug}/getting-started/welcome`)
 }
 </script>
 
@@ -40,12 +54,18 @@ function toggleColorMode() {
 
       <div class="version-select">
         <button class="version-btn" @click="versionMenuOpen = !versionMenuOpen">
-          <span class="version-tag">[{{ versions[0].label }}]</span>
+          <span class="version-tag">[{{ currentVersion.label }}]</span>
           <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
-        <ul v-if="versionMenuOpen" class="version-menu" @click="versionMenuOpen = false">
-          <li v-for="v in versions" :key="v.label">
-            <a :href="v.path" :class="{ active: v.current }">{{ v.label }}</a>
+        <ul v-if="versionMenuOpen" class="version-menu">
+          <li v-for="v in versions" :key="v.slug">
+            <a
+              href="#"
+              :class="{ active: v.slug === currentVersion.slug }"
+              @click.prevent="switchVersion(v)"
+            >
+              {{ v.label }}
+            </a>
           </li>
         </ul>
       </div>

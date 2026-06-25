@@ -10,7 +10,7 @@ export interface DocNavSection {
 
 /**
  * Hard-coded section order + labels, mirroring the zig.guide sidebar groups.
- * Folder names under content/0.13 map to these keys.
+ * Folder names under content/<version>/ map to these keys.
  */
 const SECTION_META: Record<string, { label: string; order: number }> = {
   'getting-started': { label: 'Getting Started', order: 0 },
@@ -20,13 +20,15 @@ const SECTION_META: Record<string, { label: string; order: number }> = {
   'working-with-c': { label: 'Working with C', order: 4 }
 }
 
-export const useDocsNav = async () => {
+export const useDocsNav = async (versionRef: MaybeRef<string>) => {
+  const version = toRef(versionRef)
+
   const { data: nav } = await useAsyncData('docs-nav', () => {
     return queryCollectionNavigation('docs')
   })
 
   const sections = computed<DocNavSection[]>(() => {
-    const root = nav.value?.[0]?.children ?? nav.value ?? []
+    const root = nav.value ?? []
     const grouped: Record<string, DocNavLink[]> = {}
 
     const walk = (items: any[]) => {
@@ -36,9 +38,12 @@ export const useDocsNav = async () => {
           continue
         }
         const path = item.path as string
-        const folder = path.split('/').filter(Boolean)[1] ?? 'getting-started'
+        const segments = path.split('/').filter(Boolean)
+        if (segments[0] !== version.value) continue
+
+        const folder = segments[1] ?? 'getting-started'
         if (!grouped[folder]) grouped[folder] = []
-        grouped[folder].push({ title: item.title, path: item.path })
+        grouped[folder].push({ title: item.title, path })
       }
     }
 
