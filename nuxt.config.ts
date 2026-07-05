@@ -17,6 +17,16 @@ export default defineNuxtConfig({
     fallback: "dark",
   },
 
+  mdc: {
+    components: {
+      map: {
+        ul: 'ul',
+        ol: 'ol',
+        li: 'li',
+      }
+    }
+  },
+
   content: {
     experimental: {
       sqliteConnector: "native",

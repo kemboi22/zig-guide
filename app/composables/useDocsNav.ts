@@ -1,11 +1,11 @@
 export interface DocNavLink {
-  title: string
-  path: string
+  title: string;
+  path: string;
 }
 
 export interface DocNavSection {
-  title: string
-  links: DocNavLink[]
+  title: string;
+  links: DocNavLink[];
 }
 
 /**
@@ -13,49 +13,54 @@ export interface DocNavSection {
  * Folder names under content/<version>/ map to these keys.
  */
 const SECTION_META: Record<string, { label: string; order: number }> = {
-  'getting-started': { label: 'Getting Started', order: 0 },
-  'language-basics': { label: 'Language', order: 1 },
-  'standard-library': { label: 'Standard Library', order: 2 },
-  'build-system': { label: 'Build System', order: 3 },
-  'working-with-c': { label: 'Working with C', order: 4 }
-}
+  "getting-started": { label: "Getting Started", order: 0 },
+  "language-basics": { label: "Language", order: 1 },
+  "standard-library": { label: "Standard Library", order: 2 },
+  "build-system": { label: "Build System", order: 3 },
+  "working-with-c": { label: "Working with C", order: 4 },
+};
 
 export const useDocsNav = async (versionRef: MaybeRef<string>) => {
-  const version = toRef(versionRef)
+  const version = toRef(versionRef);
 
-  const { data: nav } = await useAsyncData('docs-nav', () => {
-    return queryCollectionNavigation('docs')
-  })
+  const { data: pages } = await useAsyncData(
+    () => `docs-nav-${version.value}`,
+    () => queryCollection("docs").all(),
+  );
 
   const sections = computed<DocNavSection[]>(() => {
-    const root = nav.value ?? []
-    const grouped: Record<string, DocNavLink[]> = {}
+    const grouped: Record<
+      string,
+      { title: string; path: string; order: number }[]
+    > = {};
 
-    const walk = (items: any[]) => {
-      for (const item of items) {
-        if (item.children?.length) {
-          walk(item.children)
-          continue
-        }
-        const path = item.path as string
-        const segments = path.split('/').filter(Boolean)
-        if (segments[0] !== version.value) continue
+    for (const page of pages.value ?? []) {
+      const segments = page.path.split("/").filter(Boolean);
+      if (segments[0] !== version.value) continue;
 
-        const folder = segments[1] ?? 'getting-started'
-        if (!grouped[folder]) grouped[folder] = []
-        grouped[folder].push({ title: item.title, path })
-      }
+      const folder = segments[1] ?? "getting-started";
+      if (!grouped[folder]) grouped[folder] = [];
+
+      grouped[folder].push({
+        title: page.title,
+        path: page.path,
+        order: (page as any).order ?? 0,
+      });
     }
 
-    walk(root as any[])
-
     return Object.entries(grouped)
-      .sort((a, b) => (SECTION_META[a[0]]?.order ?? 99) - (SECTION_META[b[0]]?.order ?? 99))
-      .map(([key, links]) => ({
+      .sort(
+        (a, b) =>
+          (SECTION_META[a[0]]?.order ?? 99) -
+          (SECTION_META[b[0]]?.order ?? 99),
+      )
+      .map(([key, items]) => ({
         title: SECTION_META[key]?.label ?? key,
-        links
-      }))
-  })
+        links: items
+          .sort((a, b) => a.order - b.order)
+          .map(({ title, path }) => ({ title, path })),
+      }));
+  });
 
-  return { sections }
-}
+  return { sections };
+};

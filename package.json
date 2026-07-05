@@ -13,6 +13,8 @@
     "@nuxt/content": "^3.14.0",
     "@nuxtjs/color-mode": "^3.5.2",
     "@tailwindcss/vite": "^4.3.1",
+    "@types/node": "^26.1.0",
+    "lucide-vue-next": "^1.0.0",
     "nuxt": "^4.4.8",
     "tailwindcss": "^4.3.1",
     "vue": "^3.5.38",
