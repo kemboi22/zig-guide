@@ -1,22 +1,30 @@
 <script setup lang="ts">
-definePageMeta({ layout: 'docs' })
+definePageMeta({ layout: "docs" });
 
-const { version } = useDocVersion()
-const { page, path } = await useDocPage()
+const { version } = useDocVersion();
+const { page, path } = await useDocPage();
 
-const { data: surround } = await useAsyncData(() => `docs-surround-${path.value}`, () => {
-  return queryCollectionItemSurroundings('docs', path.value, {
-    fields: ['title']
-  })
-}, { watch: [path] })
+const { data: surround } = await useAsyncData(
+  () => `docs-surround-${path.value}`,
+  () => {
+    return queryCollectionItemSurroundings("docs", path.value, {
+      fields: ["title"],
+    });
+  },
+  { watch: [path] },
+);
 
-const prev = computed(() => surround.value?.[0] ? { title: surround.value[0].title, path: surround.value[0].path } : null)
-const next = computed(() => surround.value?.[1] ? { title: surround.value[1].title, path: surround.value[1].path } : null)
+const prev = computed(() =>
+  surround.value?.[0] ? { title: surround.value[0].title, path: surround.value[0].path } : null,
+);
+const next = computed(() =>
+  surround.value?.[1] ? { title: surround.value[1].title, path: surround.value[1].path } : null,
+);
 
 useSeoMeta({
   title: () => page.value?.title,
-  description: () => page.value?.description
-})
+  description: () => page.value?.description,
+});
 </script>
 
 <template>
