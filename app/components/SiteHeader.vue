@@ -47,6 +47,9 @@ async function switchVersion(v: { slug: string; label: string }) {
 
       <nav class="primary-nav">
         <NuxtLink to="/" class="primary-link" active-class="is-active">Guide</NuxtLink>
+        <NuxtLink to="/examples" class="primary-link" active-class="is-active">Examples</NuxtLink>
+        <NuxtLink to="/playground" class="primary-link" active-class="is-active">Playground</NuxtLink>
+        <NuxtLink to="/community" class="primary-link" active-class="is-active">Community</NuxtLink>
         <NuxtLink to="/posts" class="primary-link" active-class="is-active">Posts</NuxtLink>
       </nav>
 

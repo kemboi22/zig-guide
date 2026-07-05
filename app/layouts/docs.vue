@@ -18,6 +18,7 @@ const { page } = await useDocPage()
 
       <DocsToc v-if="page?.body?.toc?.links" :links="page.body.toc.links" />
     </div>
+    <SiteFooter />
   </div>
 </template>
 
