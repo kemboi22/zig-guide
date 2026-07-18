@@ -4,6 +4,7 @@ interface Props {
   code?: string;
   language?: string;
   filename?: string;
+  meta?: string;
 }
 
 const props = defineProps<Props>();
@@ -22,6 +23,10 @@ const code = computed(() => {
 });
 
 const isRunnable = computed(() => lang.value === "zig");
+
+const isTest = computed(() => {
+  return props.meta?.includes("test") ?? false;
+});
 
 async function copy() {
   if (!code.value) return;
@@ -42,7 +47,7 @@ async function run() {
   try {
     const result = await $fetch("/api/run-zig", {
       method: "POST",
-      body: { code: code.value },
+      body: { code: code.value, mode: isTest.value ? "test" : "run" },
     });
     output.value = [result.stdout, result.stderr]
       .filter(Boolean)

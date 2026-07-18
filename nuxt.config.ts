@@ -20,11 +20,11 @@ export default defineNuxtConfig({
   mdc: {
     components: {
       map: {
-        ul: 'ul',
-        ol: 'ol',
-        li: 'li',
-      }
-    }
+        ul: "ul",
+        ol: "ol",
+        li: "li",
+      },
+    },
   },
 
   content: {
@@ -39,7 +39,7 @@ export default defineNuxtConfig({
             dark: "github-dark-dimmed",
             light: "github-light",
           },
-          langs: ["zig", "bash", "shell", "json", "diff", "c", "yaml"],
+          langs: ["zig", "bash", "shell", "json", "diff", "c", "yaml", "lisp", "lua", "elisp"],
         },
         toc: {
           depth: 3,

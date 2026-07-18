@@ -14,14 +14,15 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: "Code is required" });
   }
 
+  const command = body?.mode === "test" ? "test" : "run";
   const id = crypto.randomUUID();
-  const filePath = path.join("/tmp", `zig-run-${id}.zig`);
+  const filePath = path.join("/tmp", `zig-${command}-${id}.zig`);
   await writeFile(filePath, code);
 
   try {
     const { stdout, stderr } = await execFileAsync(
       "zig",
-      ["run", filePath],
+      [command, filePath],
       { timeout: 10000, maxBuffer: 1024 * 1024 },
     );
     return { stdout, stderr, exitCode: 0 };
