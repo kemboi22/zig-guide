@@ -110,7 +110,10 @@ onUnmounted(() => {
         <div class="editor-pane">
           <div class="pane-header">
             <span class="pane-title">main.zig</span>
-            <span class="pane-status">{{ status }}</span>
+            <span class="pane-header-end">
+              <span class="pane-vim-mode">NORMAL</span>
+              <span class="pane-status">{{ status }}</span>
+            </span>
           </div>
           <div class="editor-body">
             <ClientOnly>
@@ -124,6 +127,12 @@ onUnmounted(() => {
                 <div class="editor-fallback">Loading editor...</div>
               </template>
             </ClientOnly>
+            <div class="editor-statusbar">
+              <span>Ln 1, Col 0</span>
+              <span>Zig</span>
+              <span>UTF-8</span>
+              <span>Vim</span>
+            </div>
           </div>
         </div>
 
@@ -296,6 +305,23 @@ onUnmounted(() => {
   background: var(--accent);
 }
 
+.pane-header-end {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pane-vim-mode {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  letter-spacing: 0.05em;
+}
+
 .pane-status {
   font-size: 0.75rem;
   color: var(--text-faint);
@@ -322,7 +348,32 @@ onUnmounted(() => {
   color: var(--text);
 }
 
-.editor-body,
+.editor-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.editor-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.85rem;
+  border-top: 1px solid var(--border);
+  background: var(--code-bg);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  user-select: none;
+}
+
+.editor-statusbar span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 .output-body {
   flex: 1;
   display: flex;

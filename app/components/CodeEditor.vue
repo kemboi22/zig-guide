@@ -3,6 +3,7 @@ import { EditorView, placeholder } from "@codemirror/view";
 import { basicSetup } from "codemirror";
 import { EditorState, Compartment } from "@codemirror/state";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { vim } from "@replit/codemirror-vim";
 import { type PropType, ref, onMounted, onUnmounted, watch } from "vue";
 import { zigLanguage, zigAutocomplete } from "~/utils/codemirror-zig";
 
@@ -19,6 +20,10 @@ const props = defineProps({
     type: Boolean as PropType<boolean>,
     default: false,
   },
+  vimMode: {
+    type: Boolean as PropType<boolean>,
+    default: true,
+  },
 });
 
 const emit = defineEmits<{
@@ -28,6 +33,7 @@ const emit = defineEmits<{
 const editorContainer = ref<HTMLDivElement>();
 let editor: EditorView | null = null;
 const editableCompartment = new Compartment();
+const vimCompartment = new Compartment();
 
 const chromeTheme = EditorView.theme({
   "&.cm-editor": {
@@ -66,6 +72,7 @@ function createEditor() {
           }
         }),
         editableCompartment.of(EditorView.editable.of(!props.disabled)),
+        vimCompartment.of(props.vimMode ? vim() : []),
         placeholder(props.placeholder),
       ],
     }),

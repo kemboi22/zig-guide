@@ -323,6 +323,50 @@ button {
 .callout-info { border-color: #2f5d8f55; background: #1c232a80; }
 .callout-info .callout-icon { color: #5fa8f7; }
 
+/* Grammar / form lines in language docs (assignment, etc.) */
+.prose .syntax-form {
+  margin: 1.25rem 0;
+  padding: 0.95rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--code-bg);
+  overflow-x: auto;
+}
+
+.prose .syntax-form code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.prose .syntax-form .sf-kw {
+  color: var(--syntax-keyword);
+  font-weight: 600;
+}
+
+.prose .syntax-form .sf-id {
+  color: var(--syntax-variable);
+}
+
+.prose .syntax-form .sf-opt {
+  color: var(--syntax-type);
+}
+
+.prose .syntax-form .sf-op {
+  color: var(--syntax-operator);
+  opacity: 0.85;
+}
+
+.prose .syntax-form .sf-val {
+  color: var(--syntax-string);
+}
+
 /* ---------------------------------------------------------------- */
 /* Custom scrollbar — thin, unobtrusive                             */
 /* ---------------------------------------------------------------- */
